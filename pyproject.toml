@@ -1,0 +1,63 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "quantgist"
+version = "0.1.0"
+description = "Official Python SDK for the QuantGist macro event API"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "QuantGist", email = "dev@quantgist.com" }]
+requires-python = ">=3.10"
+keywords = ["quantgist", "trading", "macro", "economic-calendar", "forex", "api"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial",
+]
+dependencies = [
+    "httpx>=0.27.0",
+    "pydantic>=2.0.0",
+]
+
+[project.optional-dependencies]
+async = ["httpx[asyncio]"]
+pandas = ["pandas>=2.0.0"]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "respx>=0.21.0",
+    "ruff>=0.6.0",
+    "pyright>=1.1.0",
+]
+
+[project.urls]
+Homepage = "https://quantgist.com"
+Documentation = "https://quantgist.com/docs"
+Repository = "https://github.com/quantgist/quantgist-python"
+"Bug Tracker" = "https://github.com/quantgist/quantgist-python/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/quantgist"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.pyright]
+pythonVersion = "3.10"
+typeCheckingMode = "standard"
