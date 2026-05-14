@@ -33,6 +33,7 @@ from quantgist import QuantGistClient
 
 client = QuantGistClient(api_key="qg_live_...")
 
+# Macro events
 response = client.get_events(impact="high", currency="USD", limit=10)
 for event in response.data:
     print(event.release_time, event.title, event.actual)
@@ -40,6 +41,24 @@ for event in response.data:
 # Fetch a single event by ID
 event = client.get_event("evt_abc123")
 print(event.title, event.surprise_score)
+
+# Earnings — upcoming reports
+upcoming = client.get_earnings_upcoming(limit=10)
+for e in upcoming.data:
+    print(e.report_date, e.ticker, e.eps_estimate)
+
+# Earnings — per-ticker beat/miss summary
+summary = client.get_earnings_summary("AAPL")
+print(f"AAPL beat rate: {summary.beat_rate:.0%}")
+
+# Markets overview
+overview = client.get_markets_overview()
+for q in overview.data:
+    print(q.symbol, q.close, q.change_pct)
+
+# Changelog (no auth required)
+changelog = client.get_changelog()
+print(changelog.data[0].version, changelog.data[0].summary)
 ```
 
 ## Quick start — async
@@ -99,13 +118,13 @@ with QuantGistClient(api_key="qg_live_...") as client:
 
 ---
 
-### Methods
+### Methods — macro events
 
-| Method | Signature | Returns | Description |
-|--------|-----------|---------|-------------|
-| `get_events` | `(*, from_date, to_date, country, currency, impact, symbol, limit) -> EventsResponse` | `EventsResponse` | Fetch a paginated list of macro events with optional filters. |
-| `get_event` | `(event_id: str) -> Event` | `Event` | Fetch a single event by its unique ID. |
-| `close` | `() -> None` | `None` | Close the underlying HTTP connection. Called automatically when used as a context manager. |
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `get_events(*, from_date, to_date, country, currency, impact, symbol, limit)` | `EventsResponse` | Fetch a paginated list of macro events with optional filters. |
+| `get_event(event_id)` | `Event` | Fetch a single event by its unique ID. |
+| `close()` | `None` | Close the underlying HTTP connection. Called automatically as a context manager. |
 
 #### `get_events` parameters
 
@@ -118,6 +137,42 @@ with QuantGistClient(api_key="qg_live_...") as client:
 | `impact` | `"low" \| "medium" \| "high" \| None` | `None` | Filter by market impact level. |
 | `symbol` | `str \| None` | `None` | Instrument symbol, e.g. `"XAUUSD"`, `"EURUSD"`. |
 | `limit` | `int` | `50` | Maximum number of results (1–500). |
+
+---
+
+### Methods — earnings
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `get_earnings(*, ticker, from_date, to_date, sector, beat_miss, cursor, limit)` | `EarningsResponse` | Filtered, cursor-paginated list of earnings events. |
+| `get_earnings_upcoming(*, limit)` | `EarningsResponse` | Next N upcoming earnings reports ordered by date. |
+| `get_earnings_for_ticker(ticker, *, cursor, limit)` | `EarningsResponse` | Earnings history for a single ticker. |
+| `get_earnings_summary(ticker)` | `EarningsSummary` | Beat/miss/in-line counts for a ticker. |
+| `get_earnings_history(ticker, *, cursor, limit)` | `EarningsResponse` | Paginated earnings history (**Pro+ plan required**). |
+| `get_earnings_surprises(*, limit)` | `list[EarningsSurprise]` | Largest cross-market EPS surprises. |
+| `get_earnings_movers(*, limit)` | `list[EarningsMover]` | Earnings events ranked by price/volume impact. |
+| `get_earnings_week_calendar()` | `EarningsWeekCalendar` | Week-ahead earnings calendar grouped by day. |
+| `get_earnings_season_summary()` | `EarningsSeasonSummary` | Index-level aggregate for the current earnings season. |
+
+---
+
+### Methods — markets
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `get_markets_overview()` | `MarketsOverviewResponse` | Major indices and instruments (EOD Stooq data). |
+| `get_markets_sectors()` | `MarketsOverviewResponse` | Major sector ETF quotes. |
+| `get_markets_currencies()` | `MarketsOverviewResponse` | Major currency pair quotes. |
+| `get_markets_commodities()` | `MarketsOverviewResponse` | Major commodity quotes. |
+| `get_market_quote(symbol)` | `MarketQuote` | Latest EOD quote for a single symbol. |
+
+---
+
+### Methods — changelog
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `get_changelog()` | `ChangelogResponse` | Public API changelog — no elevated plan required. |
 
 ---
 
@@ -167,6 +222,67 @@ async with AsyncQuantGistClient(api_key="qg_live_...") as client:
 | `page` | `int` | Current page number. |
 | `per_page` | `int` | Results per page. |
 | `rate_limit_remaining` | `int \| None` | Remaining requests in the current window. |
+
+---
+
+#### `EarningsEvent`
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `str` | Unique earnings event identifier. |
+| `ticker` | `str` | Stock ticker symbol. |
+| `company_name` | `str` | Company display name. |
+| `report_date` | `date` | Date of the earnings release. |
+| `fiscal_quarter` | `str \| None` | Fiscal period label, e.g. `"Q1 2025"`. |
+| `eps_estimate` | `float \| None` | Consensus EPS estimate. |
+| `eps_actual` | `float \| None` | Reported EPS (`None` if not yet released). |
+| `revenue_estimate` | `float \| None` | Consensus revenue estimate (USD). |
+| `revenue_actual` | `float \| None` | Reported revenue (`None` if pending). |
+| `surprise_pct` | `float \| None` | EPS % surprise vs estimate. |
+| `beat_miss` | `"beat" \| "miss" \| "in-line" \| None` | Outcome classification. |
+| `market_cap` | `float \| None` | Market cap at time of report (USD). |
+| `sector` | `str \| None` | GICS sector. |
+| `report_time` | `"before_open" \| "after_close" \| "during_market" \| None` | When the report was released. |
+| `sec_filing_url` | `str \| None` | URL to the SEC EDGAR 8-K filing. |
+| `sec_accession_number` | `str \| None` | SEC accession number, e.g. `"0000320193-26-000001"`. |
+| `sec_filed_at` | `date \| None` | Date filed with the SEC. |
+| `field_sources` | `dict[str, str]` | Provenance map per field, e.g. `{"eps_actual": "fmp", "sec_filing_url": "sec_edgar"}`. |
+
+#### `EarningsSummary`
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `ticker` | `str` | Ticker symbol. |
+| `company_name` | `str \| None` | Company display name. |
+| `beat` | `int` | Number of quarters where EPS beat estimates. |
+| `miss` | `int` | Number of quarters where EPS missed estimates. |
+| `in_line` | `int` | Number of in-line quarters. |
+| `total` | `int` | Total quarters in the history. |
+| `beat_rate` | `float \| None` | Beat rate as a percentage (0–100). |
+
+#### `MarketQuote`
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `symbol` | `str` | Instrument symbol. |
+| `name` | `str \| None` | Display name. |
+| `close` | `float` | Latest close price. |
+| `open` | `float \| None` | Open price. |
+| `high` | `float \| None` | Day high. |
+| `low` | `float \| None` | Day low. |
+| `volume` | `float \| None` | Volume. |
+| `change_pct` | `float \| None` | Day change percentage. |
+| `as_of` | `date \| None` | Quote date. |
+
+#### `ChangelogEntry`
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `version` | `str` | Semantic version string. |
+| `date` | `date` | Release date. |
+| `summary` | `str` | Short description of the release. |
+| `breaking` | `bool` | Whether this version contains breaking changes. |
+| `changes` | `list[str]` | Bullet-point change list. |
 
 ---
 

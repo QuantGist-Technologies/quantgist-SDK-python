@@ -6,6 +6,30 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Thi
 
 ---
 
+## [0.2.0] — 2026-05-14
+
+### Added
+
+- **Earnings API** — full coverage of `GET /v1/earnings/*` routes:
+  - `get_earnings(ticker, from_date, to_date, sector, beat_miss, cursor, limit)` — filtered list with cursor pagination
+  - `get_earnings_upcoming(limit)` — next N upcoming reports
+  - `get_earnings_for_ticker(ticker, cursor, limit)` — per-ticker history
+  - `get_earnings_summary(ticker)` — beat/miss/in-line counts and beat rate
+  - `get_earnings_history(ticker, cursor, limit)` — paginated history (Pro+ required)
+  - `get_earnings_surprises(limit)` — largest cross-market EPS surprises
+  - `get_earnings_movers(limit)` — events ranked by price/volume impact
+  - `get_earnings_week_calendar()` — week-ahead calendar grouped by day
+  - `get_earnings_season_summary()` — index-level aggregate for current season
+- **Markets API** — `GET /v1/markets/*` EOD Stooq data:
+  - `get_markets_overview()`, `get_markets_sectors()`, `get_markets_currencies()`, `get_markets_commodities()`
+  - `get_market_quote(symbol)` — single symbol EOD quote
+- **Changelog API** — `get_changelog()` — public API changelog (no elevated plan required)
+- New Pydantic models: `EarningsEvent`, `EarningsCursorMeta`, `EarningsResponse`, `EarningsSummary`, `EarningsSurprise`, `EarningsMover`, `EarningsWeekCalendar`, `EarningsWeekDay`, `EarningsSeasonSummary`, `MarketQuote`, `MarketsOverviewResponse`, `ChangelogEntry`, `ChangelogResponse`
+- `EarningsEvent` includes SEC EDGAR provenance fields: `sec_filing_url`, `sec_accession_number`, `sec_filed_at`, `field_sources`
+- All new methods are available on both `QuantGistClient` (sync) and `AsyncQuantGistClient` (async)
+
+---
+
 ## [0.1.0] — 2025-05-03
 
 Initial public release of the official QuantGist Python SDK.
