@@ -6,6 +6,22 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Thi
 
 ---
 
+## [0.2.1] — 2026-05-16
+
+### Changed
+
+- `get_earnings_week_calendar()` now calls `GET /v1/calendar` over the
+  current Mon–Sun (UTC) window instead of the removed
+  `/earnings/calendar/week` endpoint. The method is deprecated and emits a
+  `DeprecationWarning` — callers should migrate to `calendar_this_week()`.
+
+### Added
+
+- `calendar_this_week()` on both `QuantGistClient` and `AsyncQuantGistClient`
+  — returns the raw paginated `/v1/calendar` response for the current week.
+
+---
+
 ## [0.2.0] — 2026-05-14
 
 ### Added

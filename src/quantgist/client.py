@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import os
-from datetime import date, datetime
+import warnings
+from datetime import date, datetime, timedelta
 from typing import Literal
 
 import httpx
@@ -27,11 +28,38 @@ from quantgist.models import (
     MarketQuote,
     MarketsOverviewResponse,
 )
+from quantgist.resources import (
+    CalendarResource,
+    EventsResource,
+    IntelligenceResource,
+    NewsResource,
+    NotificationsResource,
+    SentimentResource,
+    SymbolsResource,
+    UsageResource,
+    WatchlistsResource,
+    WebhooksResource,
+)
 
 _DEFAULT_BASE_URL = "https://api.quantgist.com/v1"
 
 
 class QuantGistClient:
+    """Synchronous QuantGist client.
+
+    Resource-based API (recommended)::
+
+        client = QuantGistClient(api_key="qg_live_...")
+        events = client.events.list(symbol="AAPL", impact="high")
+        today  = client.calendar.today()
+        news   = client.news.list()
+
+    Legacy flat methods are also exposed on this class for backward
+    compatibility (``get_events``, ``get_event``, ``get_earnings_*``,
+    ``get_markets_*``, ``get_changelog``). The ``get_earnings_*`` methods
+    are deprecated — see method docstrings.
+    """
+
     def __init__(
         self,
         api_key: str | None = None,
@@ -50,6 +78,25 @@ class QuantGistClient:
             },
             timeout=timeout,
         )
+
+        # Resource-based API (canonical).
+        self.events = EventsResource(self._client, self._base_url)
+        self.calendar = CalendarResource(self._client, self._base_url)
+        self.intelligence = IntelligenceResource(self._client, self._base_url)
+        self.news = NewsResource(self._client, self._base_url)
+        self.notifications = NotificationsResource(self._client, self._base_url)
+        self.sentiment = SentimentResource(self._client, self._base_url)
+        self.symbols = SymbolsResource(self._client, self._base_url)
+        self.usage = UsageResource(self._client, self._base_url)
+        self.watchlists = WatchlistsResource(self._client, self._base_url)
+        self.webhooks = WebhooksResource(self._client, self._base_url)
+
+    # ------------------------------------------------------------------
+    # Legacy flat methods (kept for backward compatibility with 0.2.x)
+    # ------------------------------------------------------------------
+    # The resource-based API (``client.events.list(...)``) is the
+    # recommended way to call the API. The methods below remain so existing
+    # 0.2.x callers continue to work without modification.
 
     # ------------------------------------------------------------------
     # Macro events
@@ -232,13 +279,44 @@ class QuantGistClient:
         items = resp.get("data", resp) if isinstance(resp, dict) else resp
         return [EarningsMover.model_validate(i) for i in items]
 
-    def get_earnings_week_calendar(self) -> EarningsWeekCalendar:
-        """Return the week-ahead earnings calendar grouped by day.
+    def calendar_this_week(self) -> dict:
+        """Return calendar events for the current week (Mon–Sun, UTC).
+
+        Calls ``GET /v1/calendar`` with ``date_from``/``date_to`` covering the
+        Monday-to-Sunday window containing today's UTC date. Returns the raw
+        paginated response (``{"data": [...], "meta": {...}}``) — the shape is
+        the standard QuantGist page response, not the legacy ``EarningsWeekCalendar``.
 
         Returns:
-            :class:`~quantgist.models.EarningsWeekCalendar`
+            Raw paginated dict with ``data`` (list of calendar events) and ``meta``.
         """
-        resp = self._get("/earnings/calendar/week")
+        from datetime import timezone as _tz
+        today = datetime.now(tz=_tz.utc).date()
+        monday = today - timedelta(days=today.weekday())
+        sunday = monday + timedelta(days=6)
+        params: dict = {
+            "date_from": monday.isoformat(),
+            "date_to": sunday.isoformat(),
+            "per_page": 100,
+        }
+        return self._get("/calendar", params=params)
+
+    def get_earnings_week_calendar(self) -> EarningsWeekCalendar:
+        """Deprecated. Use :meth:`calendar_this_week` instead.
+
+        The ``/earnings/calendar/week`` endpoint no longer exists in the v1
+        backend. This wrapper now calls ``/v1/calendar`` over the current
+        Mon–Sun window and attempts to coerce the result into the legacy
+        :class:`~quantgist.models.EarningsWeekCalendar` shape. Callers should
+        migrate to :meth:`calendar_this_week`.
+        """
+        warnings.warn(
+            "get_earnings_week_calendar() is deprecated; use calendar_this_week() instead. "
+            "The /earnings/calendar/week endpoint no longer exists.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        resp = self.calendar_this_week()
         return EarningsWeekCalendar.model_validate(resp.get("data", resp))
 
     def get_earnings_season_summary(self) -> EarningsSeasonSummary:

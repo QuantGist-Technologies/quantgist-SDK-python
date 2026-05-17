@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import os
-from datetime import date, datetime
+import warnings
+from datetime import date, datetime, timedelta, timezone as _tz
 from typing import Literal
 
 import httpx
@@ -270,13 +271,38 @@ class AsyncQuantGistClient:
         items = resp.get("data", resp) if isinstance(resp, dict) else resp
         return [EarningsMover.model_validate(i) for i in items]
 
-    async def get_earnings_week_calendar(self) -> EarningsWeekCalendar:
-        """Return the week-ahead earnings calendar grouped by day.
+    async def calendar_this_week(self) -> dict:
+        """Return calendar events for the current week (Mon–Sun, UTC).
 
-        Returns:
-            :class:`~quantgist.models.EarningsWeekCalendar`
+        Calls ``GET /v1/calendar`` with ``date_from``/``date_to`` covering the
+        Monday-to-Sunday window containing today's UTC date. Returns the raw
+        paginated response (``{"data": [...], "meta": {...}}``).
         """
-        resp = await self._get("/earnings/calendar/week")
+        today = datetime.now(tz=_tz.utc).date()
+        monday = today - timedelta(days=today.weekday())
+        sunday = monday + timedelta(days=6)
+        params: dict = {
+            "date_from": monday.isoformat(),
+            "date_to": sunday.isoformat(),
+            "per_page": 100,
+        }
+        return await self._get("/calendar", params=params)
+
+    async def get_earnings_week_calendar(self) -> EarningsWeekCalendar:
+        """Deprecated. Use :meth:`calendar_this_week` instead.
+
+        The ``/earnings/calendar/week`` endpoint no longer exists in the v1
+        backend. This wrapper now calls ``/v1/calendar`` over the current
+        Mon–Sun window and attempts to coerce the result into the legacy
+        :class:`~quantgist.models.EarningsWeekCalendar` shape.
+        """
+        warnings.warn(
+            "get_earnings_week_calendar() is deprecated; use calendar_this_week() instead. "
+            "The /earnings/calendar/week endpoint no longer exists.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        resp = await self.calendar_this_week()
         return EarningsWeekCalendar.model_validate(resp.get("data", resp))
 
     async def get_earnings_season_summary(self) -> EarningsSeasonSummary:
