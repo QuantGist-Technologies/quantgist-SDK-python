@@ -322,7 +322,7 @@ def main() -> None:
             sys.exit(1)
 
     if not events:
-        print("No NFP events found. Check your plan tier — free accounts have 30-day history.")
+        print("No NFP events found. Check your plan tier — free accounts have 365-day history.")
         return
 
     surprises = compute_surprises(events)

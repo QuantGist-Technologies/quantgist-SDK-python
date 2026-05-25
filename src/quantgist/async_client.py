@@ -29,7 +29,10 @@ from quantgist.models import (
     MarketsOverviewResponse,
 )
 
+from quantgist.resources import AsyncV2Resource
+
 _DEFAULT_BASE_URL = "https://api.quantgist.com/v1"
+_DEFAULT_V2_BASE_URL = "https://api.quantgist.com/v2"
 
 
 class AsyncQuantGistClient:
@@ -55,6 +58,7 @@ class AsyncQuantGistClient:
                 "API key required. Pass api_key= or set QUANTGIST_API_KEY env var."
             )
         self._base_url = base_url.rstrip("/")
+        self._v2_base_url = self._base_url.replace("/v1", "/v2") if "/v1" in self._base_url else _DEFAULT_V2_BASE_URL
         self._client = httpx.AsyncClient(
             base_url=self._base_url,
             headers={
@@ -63,6 +67,8 @@ class AsyncQuantGistClient:
             },
             timeout=timeout,
         )
+        # v2 official-source, revision-aware API.
+        self.v2 = AsyncV2Resource(self._client, self._v2_base_url)
 
     # ------------------------------------------------------------------
     # Macro events
@@ -95,11 +101,11 @@ class AsyncQuantGistClient:
         Returns:
             :class:`~quantgist.models.EventsResponse` containing events and metadata.
         """
-        params: dict = {"limit": limit}
+        params: dict = {"per_page": limit}
         if from_date:
-            params["from"] = str(from_date)
+            params["date_from"] = str(from_date)
         if to_date:
-            params["to"] = str(to_date)
+            params["date_to"] = str(to_date)
         if country:
             params["country"] = country
         if currency:
@@ -159,9 +165,9 @@ class AsyncQuantGistClient:
         if ticker:
             params["ticker"] = ticker
         if from_date:
-            params["from"] = str(from_date)
+            params["date_from"] = str(from_date)
         if to_date:
-            params["to"] = str(to_date)
+            params["date_to"] = str(to_date)
         if sector:
             params["sector"] = sector
         if beat_miss:

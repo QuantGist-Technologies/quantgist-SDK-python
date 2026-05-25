@@ -23,7 +23,7 @@ class SymbolsResource:
         q: Optional[str] = None,
         currency: Optional[str] = None,
         page: int = 1,
-        page_size: int = 25,
+        per_page: int = 25,
     ) -> SymbolsResponseDict:
         """Search and list available symbols."""
         params = _clean_params(
@@ -31,7 +31,7 @@ class SymbolsResource:
                 "q": q,
                 "currency": currency,
                 "page": page,
-                "page_size": page_size,
+                "per_page": per_page,
             }
         )
         response = self._client.get(f"{self._base_url}/symbols", params=params)
@@ -52,7 +52,7 @@ class SymbolsResource:
         to_date: Optional[str] = None,
         impact: Optional[str] = None,
         page: int = 1,
-        page_size: int = 25,
+        per_page: int = 25,
     ) -> Any:
         """Retrieve events associated with a symbol."""
         params = _clean_params(
@@ -61,7 +61,7 @@ class SymbolsResource:
                 "to_date": to_date,
                 "impact": impact,
                 "page": page,
-                "page_size": page_size,
+                "per_page": per_page,
             }
         )
         response = self._client.get(
@@ -84,7 +84,7 @@ class AsyncSymbolsResource:
         q: Optional[str] = None,
         currency: Optional[str] = None,
         page: int = 1,
-        page_size: int = 25,
+        per_page: int = 25,
     ) -> SymbolsResponseDict:
         """Async version of :meth:`SymbolsResource.list`."""
         params = _clean_params(
@@ -92,7 +92,7 @@ class AsyncSymbolsResource:
                 "q": q,
                 "currency": currency,
                 "page": page,
-                "page_size": page_size,
+                "per_page": per_page,
             }
         )
         response = await self._client.get(f"{self._base_url}/symbols", params=params)
@@ -113,7 +113,7 @@ class AsyncSymbolsResource:
         to_date: Optional[str] = None,
         impact: Optional[str] = None,
         page: int = 1,
-        page_size: int = 25,
+        per_page: int = 25,
     ) -> Any:
         """Async version of :meth:`SymbolsResource.events`."""
         params = _clean_params(
@@ -122,7 +122,7 @@ class AsyncSymbolsResource:
                 "to_date": to_date,
                 "impact": impact,
                 "page": page,
-                "page_size": page_size,
+                "per_page": per_page,
             }
         )
         response = await self._client.get(

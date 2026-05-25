@@ -37,11 +37,13 @@ from quantgist.resources import (
     SentimentResource,
     SymbolsResource,
     UsageResource,
+    V2Resource,
     WatchlistsResource,
     WebhooksResource,
 )
 
 _DEFAULT_BASE_URL = "https://api.quantgist.com/v1"
+_DEFAULT_V2_BASE_URL = "https://api.quantgist.com/v2"
 
 
 class QuantGistClient:
@@ -70,6 +72,8 @@ class QuantGistClient:
         if not self._api_key:
             raise AuthenticationError("API key required. Pass api_key= or set QUANTGIST_API_KEY env var.")
         self._base_url = base_url.rstrip("/")
+        # v2 base URL: replace /v1 suffix with /v2, or derive from base_url.
+        self._v2_base_url = self._base_url.replace("/v1", "/v2") if "/v1" in self._base_url else _DEFAULT_V2_BASE_URL
         self._client = httpx.Client(
             base_url=self._base_url,
             headers={
@@ -90,6 +94,8 @@ class QuantGistClient:
         self.usage = UsageResource(self._client, self._base_url)
         self.watchlists = WatchlistsResource(self._client, self._base_url)
         self.webhooks = WebhooksResource(self._client, self._base_url)
+        # v2 official-source, revision-aware API.
+        self.v2 = V2Resource(self._client, self._v2_base_url)
 
     # ------------------------------------------------------------------
     # Legacy flat methods (kept for backward compatibility with 0.2.x)
@@ -113,11 +119,11 @@ class QuantGistClient:
         symbol: str | None = None,
         limit: int = 50,
     ) -> EventsResponse:
-        params: dict = {"limit": limit}
+        params: dict = {"per_page": limit}
         if from_date:
-            params["from"] = str(from_date)
+            params["date_from"] = str(from_date)
         if to_date:
-            params["to"] = str(to_date)
+            params["date_to"] = str(to_date)
         if country:
             params["country"] = country
         if currency:
@@ -167,9 +173,9 @@ class QuantGistClient:
         if ticker:
             params["ticker"] = ticker
         if from_date:
-            params["from"] = str(from_date)
+            params["date_from"] = str(from_date)
         if to_date:
-            params["to"] = str(to_date)
+            params["date_to"] = str(to_date)
         if sector:
             params["sector"] = sector
         if beat_miss:

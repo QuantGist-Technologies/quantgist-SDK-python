@@ -29,7 +29,7 @@ class NewsResource:
         to_date: Optional[str] = None,
         q: Optional[str] = None,
         page: int = 1,
-        page_size: int = 25,
+        per_page: int = 25,
     ) -> NewsResponseDict:
         """List news items with optional filters."""
         params = _clean_params(
@@ -43,7 +43,7 @@ class NewsResource:
                 "to_date": to_date,
                 "q": q,
                 "page": page,
-                "page_size": page_size,
+                "per_page": per_page,
             }
         )
         response = self._client.get(f"{self._base_url}/news", params=params)
@@ -70,7 +70,7 @@ class AsyncNewsResource:
         to_date: Optional[str] = None,
         q: Optional[str] = None,
         page: int = 1,
-        page_size: int = 25,
+        per_page: int = 25,
     ) -> NewsResponseDict:
         """Async version of :meth:`NewsResource.list`."""
         params = _clean_params(
@@ -84,7 +84,7 @@ class AsyncNewsResource:
                 "to_date": to_date,
                 "q": q,
                 "page": page,
-                "page_size": page_size,
+                "per_page": per_page,
             }
         )
         response = await self._client.get(f"{self._base_url}/news", params=params)

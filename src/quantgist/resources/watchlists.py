@@ -71,7 +71,7 @@ class WatchlistsResource:
         to_date: Optional[str] = None,
         impact: Optional[str] = None,
         page: int = 1,
-        page_size: int = 25,
+        per_page: int = 25,
     ) -> Any:
         """Retrieve events for all items in a watchlist."""
         params = _clean_params(
@@ -80,7 +80,7 @@ class WatchlistsResource:
                 "to_date": to_date,
                 "impact": impact,
                 "page": page,
-                "page_size": page_size,
+                "per_page": per_page,
             }
         )
         response = self._client.get(
@@ -152,7 +152,7 @@ class AsyncWatchlistsResource:
         to_date: Optional[str] = None,
         impact: Optional[str] = None,
         page: int = 1,
-        page_size: int = 25,
+        per_page: int = 25,
     ) -> Any:
         """Async version of :meth:`WatchlistsResource.events`."""
         params = _clean_params(
@@ -161,7 +161,7 @@ class AsyncWatchlistsResource:
                 "to_date": to_date,
                 "impact": impact,
                 "page": page,
-                "page_size": page_size,
+                "per_page": per_page,
             }
         )
         response = await self._client.get(

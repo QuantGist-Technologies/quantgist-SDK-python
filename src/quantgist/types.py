@@ -16,8 +16,8 @@ class PaginatedResponse(TypedDict):
     data: List[Any]
     total: int
     page: int
-    page_size: int
-    pages: int
+    per_page: int
+    total_pages: int
 
 
 # ---------------------------------------------------------------------------
@@ -46,8 +46,8 @@ class EventsResponseDict(TypedDict):
     data: List[EventDict]
     total: int
     page: int
-    page_size: int
-    pages: int
+    per_page: int
+    total_pages: int
 
 
 # ---------------------------------------------------------------------------
@@ -81,8 +81,8 @@ class NewsResponseDict(TypedDict):
     data: List[NewsItemDict]
     total: int
     page: int
-    page_size: int
-    pages: int
+    per_page: int
+    total_pages: int
 
 
 # ---------------------------------------------------------------------------
@@ -102,8 +102,8 @@ class SymbolsResponseDict(TypedDict):
     data: List[SymbolDict]
     total: int
     page: int
-    page_size: int
-    pages: int
+    per_page: int
+    total_pages: int
 
 
 # ---------------------------------------------------------------------------

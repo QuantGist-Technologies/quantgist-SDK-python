@@ -35,7 +35,7 @@ class EventsResource:
         sort_by: Optional[str] = None,
         sort_order: Optional[str] = None,
         page: int = 1,
-        page_size: int = 25,
+        per_page: int = 25,
     ) -> EventsResponseDict:
         """List events with optional filters."""
         params = _clean_params(
@@ -55,7 +55,7 @@ class EventsResource:
                 "sort_by": sort_by,
                 "sort_order": sort_order,
                 "page": page,
-                "page_size": page_size,
+                "per_page": per_page,
             }
         )
         response = self._client.get(f"{self._base_url}/events", params=params)
@@ -76,7 +76,7 @@ class EventsResource:
         to_date: Optional[str] = None,
         format: str = "json",
         page: int = 1,
-        page_size: int = 25,
+        per_page: int = 25,
     ) -> Any:
         """Retrieve historical events.
 
@@ -90,7 +90,7 @@ class EventsResource:
                 "to_date": to_date,
                 "format": format,
                 "page": page,
-                "page_size": page_size,
+                "per_page": per_page,
             }
         )
         response = self._client.get(f"{self._base_url}/events/historical", params=params)
@@ -125,7 +125,7 @@ class AsyncEventsResource:
         sort_by: Optional[str] = None,
         sort_order: Optional[str] = None,
         page: int = 1,
-        page_size: int = 25,
+        per_page: int = 25,
     ) -> EventsResponseDict:
         """Async version of :meth:`EventsResource.list`."""
         params = _clean_params(
@@ -145,7 +145,7 @@ class AsyncEventsResource:
                 "sort_by": sort_by,
                 "sort_order": sort_order,
                 "page": page,
-                "page_size": page_size,
+                "per_page": per_page,
             }
         )
         response = await self._client.get(f"{self._base_url}/events", params=params)
@@ -166,7 +166,7 @@ class AsyncEventsResource:
         to_date: Optional[str] = None,
         format: str = "json",
         page: int = 1,
-        page_size: int = 25,
+        per_page: int = 25,
     ) -> Any:
         """Async version of :meth:`EventsResource.historical`."""
         params = _clean_params(
@@ -176,7 +176,7 @@ class AsyncEventsResource:
                 "to_date": to_date,
                 "format": format,
                 "page": page,
-                "page_size": page_size,
+                "per_page": per_page,
             }
         )
         response = await self._client.get(
