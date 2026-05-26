@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, List, Optional
+import builtins
+from typing import Any
 
 import httpx
 
@@ -20,20 +21,20 @@ class EventsResource:
     def list(
         self,
         *,
-        symbol: Optional[str] = None,
-        symbols: Optional[List[str]] = None,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
-        event_type: Optional[str] = None,
-        source: Optional[str] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
-        q: Optional[str] = None,
-        sentiment: Optional[str] = None,
-        min_sentiment: Optional[float] = None,
-        max_sentiment: Optional[float] = None,
-        sort_by: Optional[str] = None,
-        sort_order: Optional[str] = None,
+        symbol: str | None = None,
+        symbols: builtins.list[str] | None = None,
+        currency: str | None = None,
+        impact: str | None = None,
+        event_type: str | None = None,
+        source: str | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        q: str | None = None,
+        sentiment: str | None = None,
+        min_sentiment: float | None = None,
+        max_sentiment: float | None = None,
+        sort_by: str | None = None,
+        sort_order: str | None = None,
         page: int = 1,
         per_page: int = 25,
     ) -> EventsResponseDict:
@@ -71,9 +72,9 @@ class EventsResource:
     def historical(
         self,
         *,
-        symbol: Optional[str] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
+        symbol: str | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
         format: str = "json",
         page: int = 1,
         per_page: int = 25,
@@ -93,7 +94,9 @@ class EventsResource:
                 "per_page": per_page,
             }
         )
-        response = self._client.get(f"{self._base_url}/events/historical", params=params)
+        response = self._client.get(
+            f"{self._base_url}/events/historical", params=params
+        )
         _raise_for_status(response)
         if format == "ndjson":
             return response.text
@@ -110,20 +113,20 @@ class AsyncEventsResource:
     async def list(
         self,
         *,
-        symbol: Optional[str] = None,
-        symbols: Optional[List[str]] = None,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
-        event_type: Optional[str] = None,
-        source: Optional[str] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
-        q: Optional[str] = None,
-        sentiment: Optional[str] = None,
-        min_sentiment: Optional[float] = None,
-        max_sentiment: Optional[float] = None,
-        sort_by: Optional[str] = None,
-        sort_order: Optional[str] = None,
+        symbol: str | None = None,
+        symbols: builtins.list[str] | None = None,
+        currency: str | None = None,
+        impact: str | None = None,
+        event_type: str | None = None,
+        source: str | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        q: str | None = None,
+        sentiment: str | None = None,
+        min_sentiment: float | None = None,
+        max_sentiment: float | None = None,
+        sort_by: str | None = None,
+        sort_order: str | None = None,
         page: int = 1,
         per_page: int = 25,
     ) -> EventsResponseDict:
@@ -161,9 +164,9 @@ class AsyncEventsResource:
     async def historical(
         self,
         *,
-        symbol: Optional[str] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
+        symbol: str | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
         format: str = "json",
         page: int = 1,
         per_page: int = 25,

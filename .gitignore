@@ -11,6 +11,7 @@ dist/
 .eggs/
 wheels/
 pip-wheel-metadata/
+uv.lock
 
 # Virtual environments
 .venv/

@@ -70,10 +70,16 @@ class QuantGistClient:
     ) -> None:
         self._api_key = api_key or os.environ.get("QUANTGIST_API_KEY", "")
         if not self._api_key:
-            raise AuthenticationError("API key required. Pass api_key= or set QUANTGIST_API_KEY env var.")
+            raise AuthenticationError(
+                "API key required. Pass api_key= or set QUANTGIST_API_KEY env var."
+            )
         self._base_url = base_url.rstrip("/")
         # v2 base URL: replace /v1 suffix with /v2, or derive from base_url.
-        self._v2_base_url = self._base_url.replace("/v1", "/v2") if "/v1" in self._base_url else _DEFAULT_V2_BASE_URL
+        self._v2_base_url = (
+            self._base_url.replace("/v1", "/v2")
+            if "/v1" in self._base_url
+            else _DEFAULT_V2_BASE_URL
+        )
         self._client = httpx.Client(
             base_url=self._base_url,
             headers={
@@ -317,8 +323,9 @@ class QuantGistClient:
         migrate to :meth:`calendar_this_week`.
         """
         warnings.warn(
-            "get_earnings_week_calendar() is deprecated; use calendar_this_week() instead. "
-            "The /earnings/calendar/week endpoint no longer exists.",
+            "get_earnings_week_calendar() is deprecated; "
+            "use calendar_this_week() instead. The /earnings/calendar/week "
+            "endpoint no longer exists.",
             DeprecationWarning,
             stacklevel=2,
         )

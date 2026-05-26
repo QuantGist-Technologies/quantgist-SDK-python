@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import httpx
 
@@ -22,12 +22,12 @@ class SentimentResource:
     def summary(
         self,
         *,
-        currency: Optional[str] = None,
-        country: Optional[str] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
+        currency: str | None = None,
+        country: str | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
         group_by: str = "currency",
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Aggregate sentiment statistics grouped by a dimension."""
         params = _clean_params(
             {
@@ -47,17 +47,17 @@ class SentimentResource:
     def events(
         self,
         *,
-        currency: Optional[str] = None,
-        country: Optional[str] = None,
-        sentiment: Optional[str] = None,
-        min_score: Optional[float] = None,
-        max_score: Optional[float] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
+        currency: str | None = None,
+        country: str | None = None,
+        sentiment: str | None = None,
+        min_score: float | None = None,
+        max_score: float | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
         page: int = 1,
         per_page: int = 20,
         sort_order: str = "desc",
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Paginated events filtered and sorted by sentiment score."""
         params = _clean_params(
             {
@@ -90,12 +90,12 @@ class AsyncSentimentResource:
     async def summary(
         self,
         *,
-        currency: Optional[str] = None,
-        country: Optional[str] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
+        currency: str | None = None,
+        country: str | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
         group_by: str = "currency",
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Async version of :meth:`SentimentResource.summary`."""
         params = _clean_params(
             {
@@ -115,17 +115,17 @@ class AsyncSentimentResource:
     async def events(
         self,
         *,
-        currency: Optional[str] = None,
-        country: Optional[str] = None,
-        sentiment: Optional[str] = None,
-        min_score: Optional[float] = None,
-        max_score: Optional[float] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
+        currency: str | None = None,
+        country: str | None = None,
+        sentiment: str | None = None,
+        min_score: float | None = None,
+        max_score: float | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
         page: int = 1,
         per_page: int = 20,
         sort_order: str = "desc",
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Async version of :meth:`SentimentResource.events`."""
         params = _clean_params(
             {

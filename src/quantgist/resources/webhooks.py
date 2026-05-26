@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+import builtins
+from typing import Any
 
 import httpx
 
@@ -23,14 +24,14 @@ class WebhooksResource:
         self,
         url: str,
         *,
-        events: Optional[List[str]] = None,
-        filters: Optional[Dict[str, Any]] = None,
-        impact_filter: Optional[List[str]] = None,
-        payload_template: Optional[str] = None,
-        custom_headers: Optional[Dict[str, str]] = None,
-    ) -> Dict[str, Any]:
+        events: builtins.list[str] | None = None,
+        filters: dict[str, Any] | None = None,
+        impact_filter: builtins.list[str] | None = None,
+        payload_template: str | None = None,
+        custom_headers: dict[str, str] | None = None,
+    ) -> dict[str, Any]:
         """Register a new HTTPS webhook endpoint."""
-        body: Dict[str, Any] = {"url": url}
+        body: dict[str, Any] = {"url": url}
         if events is not None:
             body["events"] = events
         if filters is not None:
@@ -49,14 +50,14 @@ class WebhooksResource:
         _raise_for_status(response)
         return response.json()
 
-    def list(self, *, page: int = 1, per_page: int = 20) -> Dict[str, Any]:
+    def list(self, *, page: int = 1, per_page: int = 20) -> dict[str, Any]:
         """List webhook endpoints for the authenticated user."""
         params = _clean_params({"page": page, "per_page": per_page})
         response = self._client.get(f"{self._base_url}/webhooks", params=params)
         _raise_for_status(response)
         return response.json()
 
-    def get(self, endpoint_id: str) -> Dict[str, Any]:
+    def get(self, endpoint_id: str) -> dict[str, Any]:
         """Retrieve a single webhook endpoint by ID."""
         response = self._client.get(f"{self._base_url}/webhooks/{endpoint_id}")
         _raise_for_status(response)
@@ -66,16 +67,16 @@ class WebhooksResource:
         self,
         endpoint_id: str,
         *,
-        url: Optional[str] = None,
-        events: Optional[List[str]] = None,
-        filters: Optional[Dict[str, Any]] = None,
-        is_active: Optional[bool] = None,
-        impact_filter: Optional[List[str]] = None,
-        payload_template: Optional[str] = None,
-        custom_headers: Optional[Dict[str, str]] = None,
-    ) -> Dict[str, Any]:
+        url: str | None = None,
+        events: builtins.list[str] | None = None,
+        filters: dict[str, Any] | None = None,
+        is_active: bool | None = None,
+        impact_filter: builtins.list[str] | None = None,
+        payload_template: str | None = None,
+        custom_headers: dict[str, str] | None = None,
+    ) -> dict[str, Any]:
         """Update a webhook endpoint."""
-        body: Dict[str, Any] = {}
+        body: dict[str, Any] = {}
         if url is not None:
             body["url"] = url
         if events is not None:
@@ -109,8 +110,8 @@ class WebhooksResource:
         *,
         page: int = 1,
         per_page: int = 20,
-        status: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        status: str | None = None,
+    ) -> dict[str, Any]:
         """List delivery history for a webhook endpoint."""
         params = _clean_params({"page": page, "per_page": per_page, "status": status})
         response = self._client.get(
@@ -119,13 +120,13 @@ class WebhooksResource:
         _raise_for_status(response)
         return response.json()
 
-    def test(self, endpoint_id: str) -> Dict[str, Any]:
+    def test(self, endpoint_id: str) -> dict[str, Any]:
         """Dispatch a synthetic test event to a webhook endpoint."""
         response = self._client.post(f"{self._base_url}/webhooks/{endpoint_id}/test")
         _raise_for_status(response)
         return response.json()
 
-    def get_branding(self) -> Dict[str, Any]:
+    def get_branding(self) -> dict[str, Any]:
         """Return the user's white-label notification branding config."""
         response = self._client.get(f"{self._base_url}/webhooks/branding")
         _raise_for_status(response)
@@ -134,13 +135,13 @@ class WebhooksResource:
     def update_branding(
         self,
         *,
-        bot_name: Optional[str] = None,
-        bot_avatar_url: Optional[str] = None,
-        color_hex: Optional[str] = None,
-        footer_text: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        bot_name: str | None = None,
+        bot_avatar_url: str | None = None,
+        color_hex: str | None = None,
+        footer_text: str | None = None,
+    ) -> dict[str, Any]:
         """Create or update the user's notification branding (upsert)."""
-        body: Dict[str, Any] = {}
+        body: dict[str, Any] = {}
         if bot_name is not None:
             body["bot_name"] = bot_name
         if bot_avatar_url is not None:
@@ -169,14 +170,14 @@ class AsyncWebhooksResource:
         self,
         url: str,
         *,
-        events: Optional[List[str]] = None,
-        filters: Optional[Dict[str, Any]] = None,
-        impact_filter: Optional[List[str]] = None,
-        payload_template: Optional[str] = None,
-        custom_headers: Optional[Dict[str, str]] = None,
-    ) -> Dict[str, Any]:
+        events: builtins.list[str] | None = None,
+        filters: dict[str, Any] | None = None,
+        impact_filter: builtins.list[str] | None = None,
+        payload_template: str | None = None,
+        custom_headers: dict[str, str] | None = None,
+    ) -> dict[str, Any]:
         """Async version of :meth:`WebhooksResource.create`."""
-        body: Dict[str, Any] = {"url": url}
+        body: dict[str, Any] = {"url": url}
         if events is not None:
             body["events"] = events
         if filters is not None:
@@ -195,14 +196,14 @@ class AsyncWebhooksResource:
         _raise_for_status(response)
         return response.json()
 
-    async def list(self, *, page: int = 1, per_page: int = 20) -> Dict[str, Any]:
+    async def list(self, *, page: int = 1, per_page: int = 20) -> dict[str, Any]:
         """Async version of :meth:`WebhooksResource.list`."""
         params = _clean_params({"page": page, "per_page": per_page})
         response = await self._client.get(f"{self._base_url}/webhooks", params=params)
         _raise_for_status(response)
         return response.json()
 
-    async def get(self, endpoint_id: str) -> Dict[str, Any]:
+    async def get(self, endpoint_id: str) -> dict[str, Any]:
         """Async version of :meth:`WebhooksResource.get`."""
         response = await self._client.get(f"{self._base_url}/webhooks/{endpoint_id}")
         _raise_for_status(response)
@@ -212,16 +213,16 @@ class AsyncWebhooksResource:
         self,
         endpoint_id: str,
         *,
-        url: Optional[str] = None,
-        events: Optional[List[str]] = None,
-        filters: Optional[Dict[str, Any]] = None,
-        is_active: Optional[bool] = None,
-        impact_filter: Optional[List[str]] = None,
-        payload_template: Optional[str] = None,
-        custom_headers: Optional[Dict[str, str]] = None,
-    ) -> Dict[str, Any]:
+        url: str | None = None,
+        events: builtins.list[str] | None = None,
+        filters: dict[str, Any] | None = None,
+        is_active: bool | None = None,
+        impact_filter: builtins.list[str] | None = None,
+        payload_template: str | None = None,
+        custom_headers: dict[str, str] | None = None,
+    ) -> dict[str, Any]:
         """Async version of :meth:`WebhooksResource.update`."""
-        body: Dict[str, Any] = {}
+        body: dict[str, Any] = {}
         if url is not None:
             body["url"] = url
         if events is not None:
@@ -255,8 +256,8 @@ class AsyncWebhooksResource:
         *,
         page: int = 1,
         per_page: int = 20,
-        status: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        status: str | None = None,
+    ) -> dict[str, Any]:
         """Async version of :meth:`WebhooksResource.deliveries`."""
         params = _clean_params({"page": page, "per_page": per_page, "status": status})
         response = await self._client.get(
@@ -265,13 +266,15 @@ class AsyncWebhooksResource:
         _raise_for_status(response)
         return response.json()
 
-    async def test(self, endpoint_id: str) -> Dict[str, Any]:
+    async def test(self, endpoint_id: str) -> dict[str, Any]:
         """Async version of :meth:`WebhooksResource.test`."""
-        response = await self._client.post(f"{self._base_url}/webhooks/{endpoint_id}/test")
+        response = await self._client.post(
+            f"{self._base_url}/webhooks/{endpoint_id}/test"
+        )
         _raise_for_status(response)
         return response.json()
 
-    async def get_branding(self) -> Dict[str, Any]:
+    async def get_branding(self) -> dict[str, Any]:
         """Async version of :meth:`WebhooksResource.get_branding`."""
         response = await self._client.get(f"{self._base_url}/webhooks/branding")
         _raise_for_status(response)
@@ -280,13 +283,13 @@ class AsyncWebhooksResource:
     async def update_branding(
         self,
         *,
-        bot_name: Optional[str] = None,
-        bot_avatar_url: Optional[str] = None,
-        color_hex: Optional[str] = None,
-        footer_text: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        bot_name: str | None = None,
+        bot_avatar_url: str | None = None,
+        color_hex: str | None = None,
+        footer_text: str | None = None,
+    ) -> dict[str, Any]:
         """Async version of :meth:`WebhooksResource.update_branding`."""
-        body: Dict[str, Any] = {}
+        body: dict[str, Any] = {}
         if bot_name is not None:
             body["bot_name"] = bot_name
         if bot_avatar_url is not None:

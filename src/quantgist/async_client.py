@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import os
 import warnings
-from datetime import date, datetime, timedelta, timezone as _tz
+from datetime import date, datetime, timedelta
+from datetime import timezone as _tz
 from typing import Literal
 
 import httpx
@@ -28,7 +29,6 @@ from quantgist.models import (
     MarketQuote,
     MarketsOverviewResponse,
 )
-
 from quantgist.resources import AsyncV2Resource
 
 _DEFAULT_BASE_URL = "https://api.quantgist.com/v1"
@@ -58,7 +58,11 @@ class AsyncQuantGistClient:
                 "API key required. Pass api_key= or set QUANTGIST_API_KEY env var."
             )
         self._base_url = base_url.rstrip("/")
-        self._v2_base_url = self._base_url.replace("/v1", "/v2") if "/v1" in self._base_url else _DEFAULT_V2_BASE_URL
+        self._v2_base_url = (
+            self._base_url.replace("/v1", "/v2")
+            if "/v1" in self._base_url
+            else _DEFAULT_V2_BASE_URL
+        )
         self._client = httpx.AsyncClient(
             base_url=self._base_url,
             headers={
@@ -251,7 +255,9 @@ class AsyncQuantGistClient:
         resp = await self._get(f"/earnings/{ticker.upper()}/history", params=params)
         return EarningsResponse.model_validate(resp)
 
-    async def get_earnings_surprises(self, *, limit: int = 20) -> list[EarningsSurprise]:
+    async def get_earnings_surprises(
+        self, *, limit: int = 20
+    ) -> list[EarningsSurprise]:
         """Return the largest cross-market EPS surprises.
 
         Args:
@@ -303,8 +309,9 @@ class AsyncQuantGistClient:
         :class:`~quantgist.models.EarningsWeekCalendar` shape.
         """
         warnings.warn(
-            "get_earnings_week_calendar() is deprecated; use calendar_this_week() instead. "
-            "The /earnings/calendar/week endpoint no longer exists.",
+            "get_earnings_week_calendar() is deprecated; "
+            "use calendar_this_week() instead. The /earnings/calendar/week "
+            "endpoint no longer exists.",
             DeprecationWarning,
             stacklevel=2,
         )

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import httpx
 
@@ -20,7 +20,7 @@ class NotificationsResource:
         self._client = client
         self._base_url = base_url
 
-    def list_channels(self, *, page: int = 1, per_page: int = 20) -> Dict[str, Any]:
+    def list_channels(self, *, page: int = 1, per_page: int = 20) -> dict[str, Any]:
         """List notification channels for the authenticated user."""
         params = _clean_params({"page": page, "per_page": per_page})
         response = self._client.get(
@@ -34,12 +34,12 @@ class NotificationsResource:
         channel_type: str,
         *,
         name: str = "My Channel",
-        config: Optional[Dict[str, Any]] = None,
-        events: Optional[List[str]] = None,
-        filters: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+        config: dict[str, Any] | None = None,
+        events: list[str] | None = None,
+        filters: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """Create a new notification channel."""
-        body: Dict[str, Any] = {"channel_type": channel_type, "name": name}
+        body: dict[str, Any] = {"channel_type": channel_type, "name": name}
         if config is not None:
             body["config"] = config
         if events is not None:
@@ -54,7 +54,7 @@ class NotificationsResource:
         _raise_for_status(response)
         return response.json()
 
-    def get_channel(self, channel_id: str) -> Dict[str, Any]:
+    def get_channel(self, channel_id: str) -> dict[str, Any]:
         """Retrieve a single notification channel by ID."""
         response = self._client.get(
             f"{self._base_url}/notifications/channels/{channel_id}"
@@ -66,14 +66,14 @@ class NotificationsResource:
         self,
         channel_id: str,
         *,
-        name: Optional[str] = None,
-        config: Optional[Dict[str, Any]] = None,
-        events: Optional[List[str]] = None,
-        filters: Optional[Dict[str, Any]] = None,
-        is_active: Optional[bool] = None,
-    ) -> Dict[str, Any]:
+        name: str | None = None,
+        config: dict[str, Any] | None = None,
+        events: list[str] | None = None,
+        filters: dict[str, Any] | None = None,
+        is_active: bool | None = None,
+    ) -> dict[str, Any]:
         """Update an existing notification channel."""
-        body: Dict[str, Any] = {}
+        body: dict[str, Any] = {}
         if name is not None:
             body["name"] = name
         if config is not None:
@@ -99,7 +99,7 @@ class NotificationsResource:
         )
         _raise_for_status(response)
 
-    def test_channel(self, channel_id: str) -> Dict[str, Any]:
+    def test_channel(self, channel_id: str) -> dict[str, Any]:
         """Dispatch a synthetic test notification through a channel."""
         response = self._client.post(
             f"{self._base_url}/notifications/channels/{channel_id}/test"
@@ -115,7 +115,9 @@ class AsyncNotificationsResource:
         self._client = client
         self._base_url = base_url
 
-    async def list_channels(self, *, page: int = 1, per_page: int = 20) -> Dict[str, Any]:
+    async def list_channels(
+        self, *, page: int = 1, per_page: int = 20
+    ) -> dict[str, Any]:
         """Async version of :meth:`NotificationsResource.list_channels`."""
         params = _clean_params({"page": page, "per_page": per_page})
         response = await self._client.get(
@@ -129,12 +131,12 @@ class AsyncNotificationsResource:
         channel_type: str,
         *,
         name: str = "My Channel",
-        config: Optional[Dict[str, Any]] = None,
-        events: Optional[List[str]] = None,
-        filters: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+        config: dict[str, Any] | None = None,
+        events: list[str] | None = None,
+        filters: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """Async version of :meth:`NotificationsResource.create_channel`."""
-        body: Dict[str, Any] = {"channel_type": channel_type, "name": name}
+        body: dict[str, Any] = {"channel_type": channel_type, "name": name}
         if config is not None:
             body["config"] = config
         if events is not None:
@@ -149,7 +151,7 @@ class AsyncNotificationsResource:
         _raise_for_status(response)
         return response.json()
 
-    async def get_channel(self, channel_id: str) -> Dict[str, Any]:
+    async def get_channel(self, channel_id: str) -> dict[str, Any]:
         """Async version of :meth:`NotificationsResource.get_channel`."""
         response = await self._client.get(
             f"{self._base_url}/notifications/channels/{channel_id}"
@@ -161,14 +163,14 @@ class AsyncNotificationsResource:
         self,
         channel_id: str,
         *,
-        name: Optional[str] = None,
-        config: Optional[Dict[str, Any]] = None,
-        events: Optional[List[str]] = None,
-        filters: Optional[Dict[str, Any]] = None,
-        is_active: Optional[bool] = None,
-    ) -> Dict[str, Any]:
+        name: str | None = None,
+        config: dict[str, Any] | None = None,
+        events: list[str] | None = None,
+        filters: dict[str, Any] | None = None,
+        is_active: bool | None = None,
+    ) -> dict[str, Any]:
         """Async version of :meth:`NotificationsResource.update_channel`."""
-        body: Dict[str, Any] = {}
+        body: dict[str, Any] = {}
         if name is not None:
             body["name"] = name
         if config is not None:
@@ -194,7 +196,7 @@ class AsyncNotificationsResource:
         )
         _raise_for_status(response)
 
-    async def test_channel(self, channel_id: str) -> Dict[str, Any]:
+    async def test_channel(self, channel_id: str) -> dict[str, Any]:
         """Async version of :meth:`NotificationsResource.test_channel`."""
         response = await self._client.post(
             f"{self._base_url}/notifications/channels/{channel_id}/test"

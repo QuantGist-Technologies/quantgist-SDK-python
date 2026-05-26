@@ -1,12 +1,11 @@
 """Tests for Pydantic models in quantgist.models."""
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime
 
 import pytest
 
 from quantgist.models import Event, EventsResponse, ResponseMeta
-
 
 REALISTIC_EVENT_JSON = {
     "id": "evt_002",

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import List, Optional
+import builtins
 
 import httpx
 
@@ -20,14 +20,14 @@ class NewsResource:
     def list(
         self,
         *,
-        source: Optional[str] = None,
-        currency: Optional[str] = None,
-        symbol: Optional[str] = None,
-        symbols: Optional[List[str]] = None,
-        impact: Optional[str] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
-        q: Optional[str] = None,
+        source: str | None = None,
+        currency: str | None = None,
+        symbol: str | None = None,
+        symbols: builtins.list[str] | None = None,
+        impact: str | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        q: str | None = None,
         page: int = 1,
         per_page: int = 25,
     ) -> NewsResponseDict:
@@ -61,14 +61,14 @@ class AsyncNewsResource:
     async def list(
         self,
         *,
-        source: Optional[str] = None,
-        currency: Optional[str] = None,
-        symbol: Optional[str] = None,
-        symbols: Optional[List[str]] = None,
-        impact: Optional[str] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
-        q: Optional[str] = None,
+        source: str | None = None,
+        currency: str | None = None,
+        symbol: str | None = None,
+        symbols: builtins.list[str] | None = None,
+        impact: str | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        q: str | None = None,
         page: int = 1,
         per_page: int = 25,
     ) -> NewsResponseDict:

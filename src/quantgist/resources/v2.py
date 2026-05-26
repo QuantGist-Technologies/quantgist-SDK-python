@@ -36,7 +36,7 @@ Quick start::
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 import httpx
 
@@ -63,21 +63,21 @@ class V2Resource:
     def events(
         self,
         *,
-        canonical_id: Optional[str] = None,
-        country: Optional[str] = None,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
-        as_of: Optional[str] = None,
-        verification_status: Optional[str] = None,
-        source_rank_max: Optional[int] = None,
-        released_only: Optional[bool] = None,
-        actual_required: Optional[bool] = None,
-        official_only: Optional[bool] = None,
-        first_print_only: Optional[bool] = None,
+        canonical_id: str | None = None,
+        country: str | None = None,
+        currency: str | None = None,
+        impact: str | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        as_of: str | None = None,
+        verification_status: str | None = None,
+        source_rank_max: int | None = None,
+        released_only: bool | None = None,
+        actual_required: bool | None = None,
+        official_only: bool | None = None,
+        first_print_only: bool | None = None,
         per_page: int = 50,
-        cursor: Optional[str] = None,
+        cursor: str | None = None,
     ) -> Any:
         """``GET /v2/events`` — filterable list of verified official-source events.
 
@@ -177,9 +177,9 @@ class V2Resource:
     def canonical_events(
         self,
         *,
-        country: Optional[str] = None,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
+        country: str | None = None,
+        currency: str | None = None,
+        impact: str | None = None,
     ) -> Any:
         """``GET /v2/canonical-events`` — discovery endpoint.
 
@@ -208,15 +208,15 @@ class V2Resource:
     def backtest(
         self,
         *,
-        canonical_id: Optional[str] = None,
-        country: Optional[str] = None,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
-        as_of: Optional[str] = None,
+        canonical_id: str | None = None,
+        country: str | None = None,
+        currency: str | None = None,
+        impact: str | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        as_of: str | None = None,
         per_page: int = 50,
-        cursor: Optional[str] = None,
+        cursor: str | None = None,
     ) -> Any:
         """``GET /v2/backtest`` — backtest-safe event query.
 
@@ -285,21 +285,21 @@ class AsyncV2Resource:
     async def events(
         self,
         *,
-        canonical_id: Optional[str] = None,
-        country: Optional[str] = None,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
-        as_of: Optional[str] = None,
-        verification_status: Optional[str] = None,
-        source_rank_max: Optional[int] = None,
-        released_only: Optional[bool] = None,
-        actual_required: Optional[bool] = None,
-        official_only: Optional[bool] = None,
-        first_print_only: Optional[bool] = None,
+        canonical_id: str | None = None,
+        country: str | None = None,
+        currency: str | None = None,
+        impact: str | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        as_of: str | None = None,
+        verification_status: str | None = None,
+        source_rank_max: int | None = None,
+        released_only: bool | None = None,
+        actual_required: bool | None = None,
+        official_only: bool | None = None,
+        first_print_only: bool | None = None,
         per_page: int = 50,
-        cursor: Optional[str] = None,
+        cursor: str | None = None,
     ) -> Any:
         """Async version of :meth:`V2Resource.events`."""
         params = _clean_params(
@@ -352,9 +352,9 @@ class AsyncV2Resource:
     async def canonical_events(
         self,
         *,
-        country: Optional[str] = None,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
+        country: str | None = None,
+        currency: str | None = None,
+        impact: str | None = None,
     ) -> Any:
         """Async version of :meth:`V2Resource.canonical_events`."""
         params = _clean_params(
@@ -369,15 +369,15 @@ class AsyncV2Resource:
     async def backtest(
         self,
         *,
-        canonical_id: Optional[str] = None,
-        country: Optional[str] = None,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
-        as_of: Optional[str] = None,
+        canonical_id: str | None = None,
+        country: str | None = None,
+        currency: str | None = None,
+        impact: str | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        as_of: str | None = None,
         per_page: int = 50,
-        cursor: Optional[str] = None,
+        cursor: str | None = None,
     ) -> Any:
         """Async version of :meth:`V2Resource.backtest`."""
         params = _clean_params(

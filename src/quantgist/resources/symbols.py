@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 import httpx
 
@@ -20,8 +20,8 @@ class SymbolsResource:
     def list(
         self,
         *,
-        q: Optional[str] = None,
-        currency: Optional[str] = None,
+        q: str | None = None,
+        currency: str | None = None,
         page: int = 1,
         per_page: int = 25,
     ) -> SymbolsResponseDict:
@@ -48,9 +48,9 @@ class SymbolsResource:
         self,
         symbol: str,
         *,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
-        impact: Optional[str] = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        impact: str | None = None,
         page: int = 1,
         per_page: int = 25,
     ) -> Any:
@@ -81,8 +81,8 @@ class AsyncSymbolsResource:
     async def list(
         self,
         *,
-        q: Optional[str] = None,
-        currency: Optional[str] = None,
+        q: str | None = None,
+        currency: str | None = None,
         page: int = 1,
         per_page: int = 25,
     ) -> SymbolsResponseDict:
@@ -109,9 +109,9 @@ class AsyncSymbolsResource:
         self,
         symbol: str,
         *,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
-        impact: Optional[str] = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        impact: str | None = None,
         page: int = 1,
         per_page: int = 25,
     ) -> Any:

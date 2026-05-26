@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, List, Optional
+from typing import Any
 
 import httpx
 
@@ -20,9 +20,9 @@ class CalendarResource:
     def today(
         self,
         *,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
-        include_actual: Optional[bool] = None,
+        currency: str | None = None,
+        impact: str | None = None,
+        include_actual: bool | None = None,
     ) -> CalendarResponseDict:
         """Fetch the calendar for today (``GET /v1/calendar``)."""
         params = _clean_params(
@@ -39,9 +39,9 @@ class CalendarResource:
     def upcoming(
         self,
         *,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
-        limit: Optional[int] = None,
+        currency: str | None = None,
+        impact: str | None = None,
+        limit: int | None = None,
     ) -> CalendarResponseDict:
         """Fetch upcoming calendar events (``GET /v1/calendar/upcoming``)."""
         params = _clean_params(
@@ -51,7 +51,9 @@ class CalendarResource:
                 "limit": limit,
             }
         )
-        response = self._client.get(f"{self._base_url}/calendar/upcoming", params=params)
+        response = self._client.get(
+            f"{self._base_url}/calendar/upcoming", params=params
+        )
         _raise_for_status(response)
         return response.json()
 
@@ -65,9 +67,9 @@ class CalendarResource:
         self,
         date: str,
         *,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
-        include_actual: Optional[bool] = None,
+        currency: str | None = None,
+        impact: str | None = None,
+        include_actual: bool | None = None,
     ) -> CalendarResponseDict:
         """Fetch the calendar for a specific date."""
         params = _clean_params(
@@ -87,9 +89,9 @@ class CalendarResource:
         start: str,
         end: str,
         *,
-        currencies: Optional[List[str]] = None,
-        impact: Optional[str] = None,
-        limit: Optional[int] = None,
+        currencies: list[str] | None = None,
+        impact: str | None = None,
+        limit: int | None = None,
     ) -> Any:
         """Fetch calendar events over a date range (``GET /v1/calendar/range``)."""
         params = _clean_params(
@@ -116,9 +118,9 @@ class AsyncCalendarResource:
     async def today(
         self,
         *,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
-        include_actual: Optional[bool] = None,
+        currency: str | None = None,
+        impact: str | None = None,
+        include_actual: bool | None = None,
     ) -> CalendarResponseDict:
         """Async version of :meth:`CalendarResource.today`."""
         params = _clean_params(
@@ -135,9 +137,9 @@ class AsyncCalendarResource:
     async def upcoming(
         self,
         *,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
-        limit: Optional[int] = None,
+        currency: str | None = None,
+        impact: str | None = None,
+        limit: int | None = None,
     ) -> CalendarResponseDict:
         """Async version of :meth:`CalendarResource.upcoming`."""
         params = _clean_params(
@@ -163,9 +165,9 @@ class AsyncCalendarResource:
         self,
         date: str,
         *,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
-        include_actual: Optional[bool] = None,
+        currency: str | None = None,
+        impact: str | None = None,
+        include_actual: bool | None = None,
     ) -> CalendarResponseDict:
         """Async version of :meth:`CalendarResource.for_date`."""
         params = _clean_params(
@@ -185,9 +187,9 @@ class AsyncCalendarResource:
         start: str,
         end: str,
         *,
-        currencies: Optional[List[str]] = None,
-        impact: Optional[str] = None,
-        limit: Optional[int] = None,
+        currencies: list[str] | None = None,
+        impact: str | None = None,
+        limit: int | None = None,
     ) -> Any:
         """Async version of :meth:`CalendarResource.range`."""
         params = _clean_params(

@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, List, Optional
+import builtins
+from typing import Any
 
 import httpx
 
@@ -16,13 +17,13 @@ class WatchlistsResource:
         self._client = client
         self._base_url = base_url
 
-    def list(self) -> List[Any]:
+    def list(self) -> builtins.list[Any]:
         """List all watchlists for the authenticated user."""
         response = self._client.get(f"{self._base_url}/watchlists")
         _raise_for_status(response)
         return response.json()
 
-    def create(self, name: str, *, description: Optional[str] = None) -> Any:
+    def create(self, name: str, *, description: str | None = None) -> Any:
         """Create a new watchlist."""
         body: dict = {"name": name}
         if description is not None:
@@ -67,9 +68,9 @@ class WatchlistsResource:
         self,
         watchlist_id: str,
         *,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
-        impact: Optional[str] = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        impact: str | None = None,
         page: int = 1,
         per_page: int = 25,
     ) -> Any:
@@ -97,13 +98,13 @@ class AsyncWatchlistsResource:
         self._client = client
         self._base_url = base_url
 
-    async def list(self) -> List[Any]:
+    async def list(self) -> builtins.list[Any]:
         """Async version of :meth:`WatchlistsResource.list`."""
         response = await self._client.get(f"{self._base_url}/watchlists")
         _raise_for_status(response)
         return response.json()
 
-    async def create(self, name: str, *, description: Optional[str] = None) -> Any:
+    async def create(self, name: str, *, description: str | None = None) -> Any:
         """Async version of :meth:`WatchlistsResource.create`."""
         body: dict = {"name": name}
         if description is not None:
@@ -118,7 +119,9 @@ class AsyncWatchlistsResource:
 
     async def delete(self, watchlist_id: str) -> None:
         """Async version of :meth:`WatchlistsResource.delete`."""
-        response = await self._client.delete(f"{self._base_url}/watchlists/{watchlist_id}")
+        response = await self._client.delete(
+            f"{self._base_url}/watchlists/{watchlist_id}"
+        )
         _raise_for_status(response)
 
     async def add_item(
@@ -148,9 +151,9 @@ class AsyncWatchlistsResource:
         self,
         watchlist_id: str,
         *,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
-        impact: Optional[str] = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        impact: str | None = None,
         page: int = 1,
         per_page: int = 25,
     ) -> Any:

@@ -44,9 +44,21 @@ SAMPLE_EVENTS_RESPONSE = {
     },
 }
 
-ERROR_401 = {"error": "Unauthorized", "detail": "Invalid API key.", "request_id": "req_abc"}
-ERROR_429 = {"error": "Rate limit exceeded", "detail": "Too many requests.", "request_id": "req_def"}
-ERROR_404 = {"error": "Not found", "detail": "Event not found.", "request_id": "req_ghi"}
+ERROR_401 = {
+    "error": "Unauthorized",
+    "detail": "Invalid API key.",
+    "request_id": "req_abc",
+}
+ERROR_429 = {
+    "error": "Rate limit exceeded",
+    "detail": "Too many requests.",
+    "request_id": "req_def",
+}
+ERROR_404 = {
+    "error": "Not found",
+    "detail": "Event not found.",
+    "request_id": "req_ghi",
+}
 
 
 # ---------------------------------------------------------------------------
@@ -160,7 +172,9 @@ def test_get_event_404_raises_not_found_error(client: QuantGistClient) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_missing_api_key_raises_authentication_error(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_missing_api_key_raises_authentication_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.delenv("QUANTGIST_API_KEY", raising=False)
     with pytest.raises(AuthenticationError) as exc_info:
         QuantGistClient(api_key=None, base_url=TEST_BASE_URL)

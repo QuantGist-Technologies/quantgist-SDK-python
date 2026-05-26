@@ -2,10 +2,9 @@
 
 from __future__ import annotations
 
-from typing import Any, List, Optional
+from typing import Any
 
 from typing_extensions import TypedDict
-
 
 # ---------------------------------------------------------------------------
 # Shared
@@ -13,7 +12,7 @@ from typing_extensions import TypedDict
 
 
 class PaginatedResponse(TypedDict):
-    data: List[Any]
+    data: list[Any]
     total: int
     page: int
     per_page: int
@@ -34,16 +33,16 @@ class EventDict(TypedDict, total=False):
     impact: str
     release_time: str
     title: str
-    actual: Optional[float]
-    forecast: Optional[float]
-    previous: Optional[float]
-    sentiment: Optional[str]
-    sentiment_score: Optional[float]
-    description: Optional[str]
+    actual: float | None
+    forecast: float | None
+    previous: float | None
+    sentiment: str | None
+    sentiment_score: float | None
+    description: str | None
 
 
 class EventsResponseDict(TypedDict):
-    data: List[EventDict]
+    data: list[EventDict]
     total: int
     page: int
     per_page: int
@@ -57,7 +56,7 @@ class EventsResponseDict(TypedDict):
 
 class CalendarResponseDict(TypedDict):
     date: str
-    events: List[EventDict]
+    events: list[EventDict]
 
 
 # ---------------------------------------------------------------------------
@@ -72,13 +71,13 @@ class NewsItemDict(TypedDict, total=False):
     url: str
     published_at: str
     currency: str
-    symbol: Optional[str]
-    impact: Optional[str]
-    summary: Optional[str]
+    symbol: str | None
+    impact: str | None
+    summary: str | None
 
 
 class NewsResponseDict(TypedDict):
-    data: List[NewsItemDict]
+    data: list[NewsItemDict]
     total: int
     page: int
     per_page: int
@@ -94,12 +93,12 @@ class SymbolDict(TypedDict, total=False):
     symbol: str
     name: str
     currency: str
-    exchange: Optional[str]
-    asset_type: Optional[str]
+    exchange: str | None
+    asset_type: str | None
 
 
 class SymbolsResponseDict(TypedDict):
-    data: List[SymbolDict]
+    data: list[SymbolDict]
     total: int
     page: int
     per_page: int
@@ -115,9 +114,9 @@ class UsageSummaryDict(TypedDict, total=False):
     plan: str
     requests_today: int
     requests_this_month: int
-    daily_limit: Optional[int]
-    monthly_limit: Optional[int]
-    reset_at: Optional[str]
+    daily_limit: int | None
+    monthly_limit: int | None
+    reset_at: str | None
 
 
 class UsageHistoryItemDict(TypedDict, total=False):
@@ -128,4 +127,4 @@ class UsageHistoryItemDict(TypedDict, total=False):
 class UsageEndpointItemDict(TypedDict, total=False):
     endpoint: str
     requests: int
-    last_called_at: Optional[str]
+    last_called_at: str | None

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 import httpx
 
@@ -19,7 +19,7 @@ _DEFAULT_BASE_URL = "https://api.quantgist.com/v1"
 _DEFAULT_TIMEOUT = 30.0
 
 
-def _build_headers(api_key: str) -> Dict[str, str]:
+def _build_headers(api_key: str) -> dict[str, str]:
     return {
         "X-API-Key": api_key,
         "Accept": "application/json",
@@ -61,9 +61,9 @@ def _raise_for_status(response: httpx.Response) -> None:
     raise QuantGistError(detail, status_code=status)
 
 
-def _clean_params(params: Dict[str, Any]) -> Dict[str, Any]:
+def _clean_params(params: dict[str, Any]) -> dict[str, Any]:
     """Remove None values and normalise booleans/lists for query-string use."""
-    cleaned: Dict[str, Any] = {}
+    cleaned: dict[str, Any] = {}
     for key, value in params.items():
         if value is None:
             continue

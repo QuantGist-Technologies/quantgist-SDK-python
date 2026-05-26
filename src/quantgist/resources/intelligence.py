@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, List, Optional
+from typing import Any
 
 import httpx
 
@@ -19,12 +19,12 @@ class IntelligenceResource:
     def surprises(
         self,
         *,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
-        limit: Optional[int] = None,
-    ) -> List[Any]:
+        currency: str | None = None,
+        impact: str | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        limit: int | None = None,
+    ) -> list[Any]:
         """Retrieve events with the largest actual-vs-forecast surprises."""
         params = _clean_params(
             {
@@ -44,12 +44,12 @@ class IntelligenceResource:
     def movers(
         self,
         *,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
-        limit: Optional[int] = None,
-    ) -> List[Any]:
+        currency: str | None = None,
+        impact: str | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        limit: int | None = None,
+    ) -> list[Any]:
         """Retrieve the biggest market movers based on event releases."""
         params = _clean_params(
             {
@@ -77,12 +77,12 @@ class AsyncIntelligenceResource:
     async def surprises(
         self,
         *,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
-        limit: Optional[int] = None,
-    ) -> List[Any]:
+        currency: str | None = None,
+        impact: str | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        limit: int | None = None,
+    ) -> list[Any]:
         """Async version of :meth:`IntelligenceResource.surprises`."""
         params = _clean_params(
             {
@@ -102,12 +102,12 @@ class AsyncIntelligenceResource:
     async def movers(
         self,
         *,
-        currency: Optional[str] = None,
-        impact: Optional[str] = None,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
-        limit: Optional[int] = None,
-    ) -> List[Any]:
+        currency: str | None = None,
+        impact: str | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        limit: int | None = None,
+    ) -> list[Any]:
         """Async version of :meth:`IntelligenceResource.movers`."""
         params = _clean_params(
             {
