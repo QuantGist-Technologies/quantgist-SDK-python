@@ -19,7 +19,7 @@ Educational purpose:
         before that timestamp in a backtest (lookahead bias).
 
 Install:
-    pip install quantgist-py
+    pip install quantgist
 
 Run:
     export QUANTGIST_API_KEY="qg_live_..."

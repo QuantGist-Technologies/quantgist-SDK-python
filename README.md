@@ -1,7 +1,7 @@
-# quantgist-py
+# quantgist
 
-[![PyPI version](https://img.shields.io/pypi/v/quantgist-py.svg)](https://pypi.org/project/quantgist-py/)
-[![Python versions](https://img.shields.io/pypi/pyversions/quantgist-py.svg)](https://pypi.org/project/quantgist-py/)
+[![PyPI version](https://img.shields.io/pypi/v/quantgist.svg)](https://pypi.org/project/quantgist/)
+[![Python versions](https://img.shields.io/pypi/pyversions/quantgist.svg)](https://pypi.org/project/quantgist/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Official Python SDK for the [QuantGist](https://quantgist.com) macro economic event API. Get real-time and historical central bank decisions, employment reports, inflation releases, and more — with a single line of Python.
@@ -13,18 +13,16 @@ Get a free API key at [quantgist.com/signup](https://quantgist.com/signup).
 ## Install
 
 ```bash
-pip install quantgist-py
+pip install quantgist
 ```
 
 Or with [uv](https://docs.astral.sh/uv/):
 
 ```bash
-uv add quantgist-py
+uv add quantgist
 ```
 
-Requires Python 3.10+.
-
-The PyPI distribution is `quantgist-py`; the import module remains `quantgist`:
+Requires Python 3.10+. Import the SDK with:
 
 ```python
 from quantgist import QuantGistClient
