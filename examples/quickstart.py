@@ -3,9 +3,9 @@ QuantGist Python SDK — 30-second quickstart
 ============================================
 
 Install:
-    pip install quantgist
+    pip install quantgist-py
     # or
-    uv add quantgist
+    uv add quantgist-py
 
 Set your API key (get one free at https://quantgist.com):
     export QUANTGIST_API_KEY="qg_live_..."

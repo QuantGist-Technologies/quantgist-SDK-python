@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "quantgist"
+name = "quantgist-py"
 version = "0.4.0"
 description = "Official Python SDK for the QuantGist macro event API"
 readme = "README.md"
@@ -42,8 +42,8 @@ dev = [
 [project.urls]
 Homepage = "https://quantgist.com"
 Documentation = "https://quantgist.com/docs"
-Repository = "https://github.com/quantgist/quantgist-python"
-"Bug Tracker" = "https://github.com/quantgist/quantgist-python/issues"
+Repository = "https://github.com/QuantGist-Technologies/quantgist-SDK-python"
+"Bug Tracker" = "https://github.com/QuantGist-Technologies/quantgist-SDK-python/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/quantgist"]

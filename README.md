@@ -1,7 +1,7 @@
-# quantgist
+# quantgist-py
 
-[![PyPI version](https://img.shields.io/pypi/v/quantgist.svg)](https://pypi.org/project/quantgist/)
-[![Python versions](https://img.shields.io/pypi/pyversions/quantgist.svg)](https://pypi.org/project/quantgist/)
+[![PyPI version](https://img.shields.io/pypi/v/quantgist-py.svg)](https://pypi.org/project/quantgist-py/)
+[![Python versions](https://img.shields.io/pypi/pyversions/quantgist-py.svg)](https://pypi.org/project/quantgist-py/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Official Python SDK for the [QuantGist](https://quantgist.com) macro economic event API. Get real-time and historical central bank decisions, employment reports, inflation releases, and more — with a single line of Python.
@@ -13,16 +13,70 @@ Get a free API key at [quantgist.com/signup](https://quantgist.com/signup).
 ## Install
 
 ```bash
-pip install quantgist
+pip install quantgist-py
 ```
 
 Or with [uv](https://docs.astral.sh/uv/):
 
 ```bash
-uv add quantgist
+uv add quantgist-py
 ```
 
 Requires Python 3.10+.
+
+The PyPI distribution is `quantgist-py`; the import module remains `quantgist`:
+
+```python
+from quantgist import QuantGistClient
+```
+
+---
+
+## Macro Shortcuts
+
+The `/v1/macro/*` endpoints provide trader-friendly aliases for common macro events:
+
+```python
+import httpx
+
+headers = {"X-API-Key": "your_api_key"}
+
+# Get the latest released NFP value
+response = httpx.get(
+    "https://api.quantgist.com/v1/macro/latest",
+    params={"event": "NFP"},
+    headers=headers,
+)
+nfp = response.json()
+print(f"NFP: {nfp['actual']} (forecast: {nfp['forecast']})")
+print(f"Released: {nfp['release_time']}")
+
+# Get next scheduled CPI release
+upcoming_cpi = httpx.get(
+    "https://api.quantgist.com/v1/macro/upcoming",
+    params={"event": "CPI"},
+    headers=headers,
+).json()
+print(f"Next CPI: {upcoming_cpi['release_time']}")
+
+# Get upcoming CPI + NFP + FOMC calendar (next 14 days)
+calendar = httpx.get(
+    "https://api.quantgist.com/v1/macro/calendar",
+    params={"events": "CPI,NFP,FOMC", "days": 14},
+    headers=headers,
+).json()
+for group in calendar:
+    print(f"{group['event']}: {group['next_release']}")
+
+# List all supported macro aliases
+aliases = httpx.get(
+    "https://api.quantgist.com/v1/macro/events",
+    headers=headers,
+).json()
+print(f"Supported: {[a['aliases'][0] for a in aliases]}")
+```
+
+Supported aliases: `NFP`, `CPI`, `PCE`, `FOMC`, `GDP`, `UNEMPLOYMENT`, `RETAIL_SALES`, `PPI`, `ISM`, `ECB`, `HICP`
 
 ---
 
@@ -346,5 +400,5 @@ See the [`examples/`](../../examples/) directory for runnable scripts covering:
 
 - API docs: [quantgist.com/docs](https://quantgist.com/docs)
 - Sign up for a free key: [quantgist.com/signup](https://quantgist.com/signup)
-- GitHub: [github.com/quantgist/quantgist-python](https://github.com/quantgist/quantgist-python)
-- Issue tracker: [github.com/quantgist/quantgist-python/issues](https://github.com/quantgist/quantgist-python/issues)
+- GitHub: [github.com/QuantGist-Technologies/quantgist-SDK-python](https://github.com/QuantGist-Technologies/quantgist-SDK-python)
+- Issue tracker: [github.com/QuantGist-Technologies/quantgist-SDK-python/issues](https://github.com/QuantGist-Technologies/quantgist-SDK-python/issues)
