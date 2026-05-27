@@ -6,6 +6,20 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Thi
 
 ---
 
+## [0.5.0] — 2026-05-27
+
+### Added
+
+- **News Radar** — `client.news.radar()` / `async_client.news.radar()` — returns
+  scored, asset-linked market-risk clusters from `GET /v1/news/radar`.
+  Supports `topic`, `symbols`, `min_impact`, `event_type`, `status`,
+  `lookback_hours`, `limit` filters.
+- **Topic catalogue** — `client.news.topics()` / `client.news.topic(slug)` —
+  lists all 9 topic packs or fetches a single pack by slug from
+  `GET /v1/news/topics` / `GET /v1/news/topics/{slug}`.
+
+---
+
 ## [0.2.1] — 2026-05-16
 
 ### Changed
