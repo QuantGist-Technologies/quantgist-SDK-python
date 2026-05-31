@@ -107,9 +107,9 @@ class AsyncQuantGistClient:
         """
         params: dict = {"per_page": limit}
         if from_date:
-            params["date_from"] = str(from_date)
+            params["from_date"] = str(from_date)
         if to_date:
-            params["date_to"] = str(to_date)
+            params["to_date"] = str(to_date)
         if country:
             params["country"] = country
         if currency:
@@ -286,7 +286,7 @@ class AsyncQuantGistClient:
     async def calendar_this_week(self) -> dict:
         """Return calendar events for the current week (Mon–Sun, UTC).
 
-        Calls ``GET /v1/calendar`` with ``date_from``/``date_to`` covering the
+        Calls ``GET /v1/calendar`` with ``from_date``/``to_date`` covering the
         Monday-to-Sunday window containing today's UTC date. Returns the raw
         paginated response (``{"data": [...], "meta": {...}}``).
         """
@@ -294,8 +294,8 @@ class AsyncQuantGistClient:
         monday = today - timedelta(days=today.weekday())
         sunday = monday + timedelta(days=6)
         params: dict = {
-            "date_from": monday.isoformat(),
-            "date_to": sunday.isoformat(),
+            "from_date": monday.isoformat(),
+            "to_date": sunday.isoformat(),
             "per_page": 100,
         }
         return await self._get("/calendar", params=params)

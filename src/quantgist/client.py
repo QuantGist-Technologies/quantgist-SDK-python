@@ -127,9 +127,9 @@ class QuantGistClient:
     ) -> EventsResponse:
         params: dict = {"per_page": limit}
         if from_date:
-            params["date_from"] = str(from_date)
+            params["from_date"] = str(from_date)
         if to_date:
-            params["date_to"] = str(to_date)
+            params["to_date"] = str(to_date)
         if country:
             params["country"] = country
         if currency:
