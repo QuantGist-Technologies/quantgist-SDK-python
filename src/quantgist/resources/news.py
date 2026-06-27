@@ -173,9 +173,52 @@ def _attach_sync(cls):  # noqa: ANN001
         _raise_for_status(response)
         return response.json()
 
+    def watchlists(self) -> dict:
+        """List the authenticated user's News Radar watchlists."""
+        response = self._client.get(f"{self._base_url}/news/watchlists")
+        _raise_for_status(response)
+        return response.json()
+
+    def create_watchlist(self, *, topic_slug: str, min_impact: float = 0.5) -> dict:
+        """Subscribe to a topic-pack slug. Returns 409 if already subscribed."""
+        params = _clean_params({"topic_slug": topic_slug, "min_impact": min_impact})
+        response = self._client.post(f"{self._base_url}/news/watchlists", params=params)
+        _raise_for_status(response)
+        return response.json()
+
+    def delete_watchlist(self, topic_slug: str) -> None:
+        """Unsubscribe from a topic-pack slug. Returns None on success (204)."""
+        response = self._client.delete(f"{self._base_url}/news/watchlists/{topic_slug}")
+        _raise_for_status(response)
+
+    def alerts(self, *, unread_only: bool = True, limit: int = 50) -> dict:
+        """List alerts fired for the authenticated user's watchlists."""
+        params = _clean_params({"unread_only": unread_only, "limit": limit})
+        response = self._client.get(f"{self._base_url}/news/alerts", params=params)
+        _raise_for_status(response)
+        return response.json()
+
+    def ack_alert(self, alert_id: str) -> dict:
+        """Mark one alert as read by alert UUID."""
+        response = self._client.post(f"{self._base_url}/news/alerts/{alert_id}/ack")
+        _raise_for_status(response)
+        return response.json()
+
+    def ack_all_alerts(self) -> dict:
+        """Mark all unread alerts as read. Returns {'acked': N}."""
+        response = self._client.post(f"{self._base_url}/news/alerts/ack-all")
+        _raise_for_status(response)
+        return response.json()
+
     cls.radar = radar
     cls.topics = topics
     cls.topic = topic
+    cls.watchlists = watchlists
+    cls.create_watchlist = create_watchlist
+    cls.delete_watchlist = delete_watchlist
+    cls.alerts = alerts
+    cls.ack_alert = ack_alert
+    cls.ack_all_alerts = ack_all_alerts
     return cls
 
 
@@ -217,9 +260,52 @@ def _attach_async(cls):  # noqa: ANN001
         _raise_for_status(response)
         return response.json()
 
+    async def watchlists(self) -> dict:
+        """List the authenticated user's News Radar watchlists."""
+        response = await self._client.get(f"{self._base_url}/news/watchlists")
+        _raise_for_status(response)
+        return response.json()
+
+    async def create_watchlist(self, *, topic_slug: str, min_impact: float = 0.5) -> dict:
+        """Subscribe to a topic-pack slug. Returns 409 if already subscribed."""
+        params = _clean_params({"topic_slug": topic_slug, "min_impact": min_impact})
+        response = await self._client.post(f"{self._base_url}/news/watchlists", params=params)
+        _raise_for_status(response)
+        return response.json()
+
+    async def delete_watchlist(self, topic_slug: str) -> None:
+        """Unsubscribe from a topic-pack slug. Returns None on success (204)."""
+        response = await self._client.delete(f"{self._base_url}/news/watchlists/{topic_slug}")
+        _raise_for_status(response)
+
+    async def alerts(self, *, unread_only: bool = True, limit: int = 50) -> dict:
+        """List alerts fired for the authenticated user's watchlists."""
+        params = _clean_params({"unread_only": unread_only, "limit": limit})
+        response = await self._client.get(f"{self._base_url}/news/alerts", params=params)
+        _raise_for_status(response)
+        return response.json()
+
+    async def ack_alert(self, alert_id: str) -> dict:
+        """Mark one alert as read by alert UUID."""
+        response = await self._client.post(f"{self._base_url}/news/alerts/{alert_id}/ack")
+        _raise_for_status(response)
+        return response.json()
+
+    async def ack_all_alerts(self) -> dict:
+        """Mark all unread alerts as read. Returns {'acked': N}."""
+        response = await self._client.post(f"{self._base_url}/news/alerts/ack-all")
+        _raise_for_status(response)
+        return response.json()
+
     cls.radar = radar
     cls.topics = topics
     cls.topic = topic
+    cls.watchlists = watchlists
+    cls.create_watchlist = create_watchlist
+    cls.delete_watchlist = delete_watchlist
+    cls.alerts = alerts
+    cls.ack_alert = ack_alert
+    cls.ack_all_alerts = ack_all_alerts
     return cls
 
 
