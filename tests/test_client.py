@@ -30,18 +30,19 @@ SAMPLE_EVENT = {
     "previous": 165.0,
     "actual": 272.0,
     "surprise_score": 0.87,
-    "affected_symbols": ["XAUUSD", "EURUSD", "US30"],
+    "symbols": ["XAUUSD", "EURUSD", "US30"],
     "source": "bls.gov",
 }
 
+# Current API shape: pagination top-level, no nested "meta".
 SAMPLE_EVENTS_RESPONSE = {
     "data": [SAMPLE_EVENT],
-    "meta": {
-        "total": 1,
-        "page": 1,
-        "per_page": 50,
-        "rate_limit_remaining": 999,
-    },
+    "total": 1,
+    "page": 1,
+    "per_page": 50,
+    "has_more": False,
+    "total_pages": 1,
+    "backtest_safe": False,
 }
 
 ERROR_401 = {
@@ -84,7 +85,11 @@ def async_client() -> AsyncQuantGistClient:
 @respx.mock
 def test_get_events_returns_events_response(client: QuantGistClient) -> None:
     respx.get(f"{TEST_BASE_URL}/events").mock(
-        return_value=httpx.Response(200, json=SAMPLE_EVENTS_RESPONSE)
+        return_value=httpx.Response(
+            200,
+            json=SAMPLE_EVENTS_RESPONSE,
+            headers={"X-RateLimit-Remaining": "999"},  # rate limit is header-based now
+        )
     )
     result = client.get_events()
 
@@ -94,6 +99,7 @@ def test_get_events_returns_events_response(client: QuantGistClient) -> None:
     assert result.data[0].id == "evt_001"
     assert result.data[0].title == "Nonfarm Payrolls"
     assert result.data[0].impact == "high"
+    assert result.total == 1
     assert result.meta.total == 1
     assert result.meta.rate_limit_remaining == 999
 

@@ -3,27 +3,49 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class Event(BaseModel):
+    """A macro / market event row from ``GET /v1/events``.
+
+    Most fields are optional: news-type events carry null ``country``/``currency``
+    and no ``source``, and the API adds fields over time. The canonical symbol list
+    is ``symbols`` (``affected_symbols`` remains as a read alias).
+    """
+
+    model_config = ConfigDict(populate_by_name=True)
+
     id: str
     title: str
-    country: str
-    currency: str
+    country: str | None = None
+    currency: str | None = None
     release_time: datetime
-    impact: Literal["low", "medium", "high"]
-    forecast: float | None = None
-    previous: float | None = None
-    actual: float | None = None
+    impact: str
+    # The API returns these as display-formatted strings ("3.20%", "8K", "765.5B"),
+    # occasionally bare numbers — accept both.
+    forecast: float | str | None = None
+    previous: float | str | None = None
+    actual: float | str | None = None
+    # Newer API fields (all optional).
+    source_event_id: str | None = None
+    event_type: str | None = None
+    published_at: datetime | None = None
+    title_normalized: str | None = None
+    summary: str | None = None
+    symbols: list[str] = Field(default_factory=list)
+    sectors: list[str] = Field(default_factory=list)
+    asset_classes: list[str] = Field(default_factory=list)
+    sentiment_score: float | None = None
+    sentiment_label: str | None = None
+    impact_score: float | None = None
     surprise_score: float | None = None
-    affected_symbols: list[str] = Field(default_factory=list)
-    source: str
+    source: str | None = None
 
-
-class EventsResponse(BaseModel):
-    data: list[Event]
-    meta: ResponseMeta
+    @property
+    def affected_symbols(self) -> list[str]:
+        """Back-compat alias — the API field is now ``symbols``."""
+        return self.symbols
 
 
 class ResponseMeta(BaseModel):
@@ -31,6 +53,33 @@ class ResponseMeta(BaseModel):
     page: int
     per_page: int
     rate_limit_remaining: int | None = None
+
+
+class EventsResponse(BaseModel):
+    """Response from ``GET /v1/events``.
+
+    Pagination fields are top-level (the API no longer nests them under ``meta``).
+    ``rate_limit_remaining`` is populated by the client from the response headers.
+    """
+
+    data: list[Event]
+    total: int | None = None
+    page: int | None = None
+    per_page: int | None = None
+    has_more: bool | None = None
+    total_pages: int | None = None
+    backtest_safe: bool | None = None
+    rate_limit_remaining: int | None = None
+
+    @property
+    def meta(self) -> ResponseMeta:
+        """Back-compat: older callers read ``response.meta.rate_limit_remaining``."""
+        return ResponseMeta(
+            total=self.total or 0,
+            page=self.page or 1,
+            per_page=self.per_page or len(self.data),
+            rate_limit_remaining=self.rate_limit_remaining,
+        )
 
 
 # ---------------------------------------------------------------------------

@@ -266,28 +266,38 @@ def _attach_async(cls):  # noqa: ANN001
         _raise_for_status(response)
         return response.json()
 
-    async def create_watchlist(self, *, topic_slug: str, min_impact: float = 0.5) -> dict:
+    async def create_watchlist(
+        self, *, topic_slug: str, min_impact: float = 0.5
+    ) -> dict:
         """Subscribe to a topic-pack slug. Returns 409 if already subscribed."""
         params = _clean_params({"topic_slug": topic_slug, "min_impact": min_impact})
-        response = await self._client.post(f"{self._base_url}/news/watchlists", params=params)
+        response = await self._client.post(
+            f"{self._base_url}/news/watchlists", params=params
+        )
         _raise_for_status(response)
         return response.json()
 
     async def delete_watchlist(self, topic_slug: str) -> None:
         """Unsubscribe from a topic-pack slug. Returns None on success (204)."""
-        response = await self._client.delete(f"{self._base_url}/news/watchlists/{topic_slug}")
+        response = await self._client.delete(
+            f"{self._base_url}/news/watchlists/{topic_slug}"
+        )
         _raise_for_status(response)
 
     async def alerts(self, *, unread_only: bool = True, limit: int = 50) -> dict:
         """List alerts fired for the authenticated user's watchlists."""
         params = _clean_params({"unread_only": unread_only, "limit": limit})
-        response = await self._client.get(f"{self._base_url}/news/alerts", params=params)
+        response = await self._client.get(
+            f"{self._base_url}/news/alerts", params=params
+        )
         _raise_for_status(response)
         return response.json()
 
     async def ack_alert(self, alert_id: str) -> dict:
         """Mark one alert as read by alert UUID."""
-        response = await self._client.post(f"{self._base_url}/news/alerts/{alert_id}/ack")
+        response = await self._client.post(
+            f"{self._base_url}/news/alerts/{alert_id}/ack"
+        )
         _raise_for_status(response)
         return response.json()
 

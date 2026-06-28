@@ -88,6 +88,8 @@ class QuantGistClient:
             },
             timeout=timeout,
         )
+        # Last seen X-RateLimit-Remaining header value (populated per request).
+        self._last_rate_limit_remaining: int | None = None
 
         # Resource-based API (canonical).
         self.events = EventsResource(self._client, self._base_url)
@@ -140,7 +142,10 @@ class QuantGistClient:
             params["symbol"] = symbol
 
         resp = self._get("/events", params=params)
-        return EventsResponse.model_validate(resp)
+        result = EventsResponse.model_validate(resp)
+        if result.rate_limit_remaining is None:
+            result.rate_limit_remaining = self._last_rate_limit_remaining
+        return result
 
     def get_event(self, event_id: str) -> Event:
         resp = self._get(f"/events/{event_id}")
@@ -418,6 +423,13 @@ class QuantGistClient:
         return self._handle_response(response)
 
     def _handle_response(self, response: httpx.Response) -> dict:
+        # Rate limit moved to response headers — capture it for callers.
+        rl = response.headers.get("X-RateLimit-Remaining")
+        if rl is not None:
+            try:
+                self._last_rate_limit_remaining = int(rl)
+            except ValueError:
+                pass
         if response.status_code == 200:
             return response.json()
         body = response.json() if response.content else {}

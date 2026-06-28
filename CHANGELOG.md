@@ -6,6 +6,22 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Thi
 
 ---
 
+## [0.7.1] — 2026-06-28
+
+### Fixed
+
+- **`get_events` no longer crashes on live data.** The `Event` model now matches the
+  current API: `country`/`currency`/`source` are optional, `impact` is a free string,
+  and `forecast`/`previous`/`actual` accept the display-formatted strings the API returns
+  (e.g. `"3.20%"`, `"8K"`, `"765.5B"`). Added `symbols` (with `affected_symbols` kept as a
+  read alias) plus `event_type`, `published_at`, `summary`, `sectors`, `asset_classes`,
+  `sentiment_score`, `sentiment_label`, `impact_score`.
+- **`EventsResponse` matches the real response shape** — pagination is top-level
+  (`total`, `page`, `per_page`, `has_more`, `total_pages`, `backtest_safe`); the nested
+  `meta` is preserved as a backward-compatible property.
+- **Rate limit is read from the `X-RateLimit-Remaining` response header** and exposed via
+  `EventsResponse.rate_limit_remaining` / `.meta.rate_limit_remaining`.
+
 ## [0.5.0] — 2026-05-27
 
 ### Added
